@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Post;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
+use App\Traits\ValidationFailed;
 use Illuminate\Foundation\Http\FormRequest;
 use Auth;
 
 class PostUpdateRequest extends FormRequest
 {
+    use ValidationFailed;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,17 +32,11 @@ class PostUpdateRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422)
-        );
-    }
-
+    /**
+     * Define validation error messages
+     * 
+     * @return array<string, string>
+     */
     public function messages()
     {
         return [

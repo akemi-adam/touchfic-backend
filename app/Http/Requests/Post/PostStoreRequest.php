@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Post;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\ValidationFailed;
 use Auth;
 
 class PostStoreRequest extends FormRequest
 {
+    use ValidationFailed;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,17 +29,6 @@ class PostStoreRequest extends FormRequest
         return [
             'content' => [ 'required', 'min:10', 'string' ],
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422)
-        );
     }
 
     public function messages()

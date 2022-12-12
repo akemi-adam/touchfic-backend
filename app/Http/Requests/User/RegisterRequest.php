@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\ValidationFailed;
 use Auth;
 
 class RegisterRequest extends FormRequest
 {
+    use ValidationFailed;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,17 +31,6 @@ class RegisterRequest extends FormRequest
             'email' => [ 'required', 'email', 'unique:users,email' ],
             'password' => [ 'required' ]
         ];
-    }
-
-    public function faliedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422)
-        );
     }
 
     public function messages()
