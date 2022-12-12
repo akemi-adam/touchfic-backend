@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\{
     LoginController, RegisterUserController,
 };
+use App\Http\Controllers\Post\{
+    PostController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +26,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/auth/login', LoginController::class)->name('login');
 Route::post('/auth/register', RegisterUserController::class)->name('register');
+
+Route::apiResource('post', PostController::class)->middleware(['auth:sanctum']);

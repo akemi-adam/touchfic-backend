@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Post;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Auth;
 
-class RegisterRequest extends FormRequest
+class PostStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return !Auth::check();
+        return Auth::check();
     }
 
     /**
@@ -27,19 +27,17 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [ 'required' ],
-            'email' => [ 'required', 'email', 'unique:users,email' ],
-            'password' => [ 'required' ]
+            'content' => [ 'required', 'min:10', 'string' ],
         ];
     }
 
-    public function faliedValidation(Validator $validator)
+    public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
             response()->json([
                 'status' => false,
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422)
         );
     }
@@ -47,11 +45,9 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name is required',
-            'email.required' => 'The email is required',
-            'email.email' => 'The email must be of the type email',
-            'email.unique:users,email' => 'There is already a user registered with this email address',
-            'password.required' => 'The password is required',
+            'content.required' => 'The content is required',
+            'content.min' => 'The content must be a minimum of 10 characters',
+            'content.string' => 'The content must be a text'
         ];
     }
 }
